@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@google-cloud/text-to-speech": "^4.2.1",
+    "base64-js": "^1.5.1",
     "primeicons": "^6.0.1",
     "primevue": "^3.23.0"
   }
