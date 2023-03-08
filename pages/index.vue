@@ -21,17 +21,35 @@
     </form>
 
     <audio v-show="url.length" :src="url" controls class="audio" />
+
+    <div v-show="url.length" class="answer">
+      <form @submit="onAnswerSubmit">
+        <span class="p-float-label">
+          <InputNumber class="input" id="answer" v-model="userAnswer" />
+          <label for="answer">Answer</label>
+        </span>
+
+        <Button class="answer-button" type="submit">Submit</Button>
+      </form>
+    </div>
   </Container>
+
+  <Toast />
 </template>
 
 <script setup>
 import { ref } from "vue";
 import Container from "src/shared/ui/container.vue";
 import { numbersApi } from "src/shared/api/numbers";
+import { useToast } from "primevue/usetoast";
 
 const min = ref(1);
 const max = ref(100);
 const url = ref("");
+const userAnswer = ref(0);
+const correctAnswer = ref(0);
+
+const toast = useToast();
 
 const base64ToBlob = (base64, type) => {
   const byteString = atob(base64);
@@ -49,7 +67,32 @@ const onSubmit = async (e) => {
   const res = await numbersApi.getAudio({ min: min.value, max: max.value });
   const blob = base64ToBlob(res.audio, "audio/mpeg");
 
+  correctAnswer.value = res.number;
+
   url.value = URL.createObjectURL(blob);
+};
+
+const onAnswerSubmit = (e) => {
+  e.preventDefault();
+  console.log(toast);
+  if (correctAnswer.value === userAnswer.value) {
+    toast.add({
+      severity: "success",
+      summary: "Info",
+      detail: "Correct",
+      life: 3000,
+    });
+
+    url.value = "";
+    userAnswer.value = 0;
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Info",
+      detail: "Incorrect",
+      life: 3000,
+    });
+  }
 };
 </script>
 
@@ -68,6 +111,15 @@ const onSubmit = async (e) => {
 }
 
 .audio {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.answer {
+  margin-top: 20px;
+}
+
+.answer-button {
   margin-top: 20px;
 }
 </style>
