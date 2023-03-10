@@ -21,7 +21,11 @@ async function getAudioForNumber(number: number) {
 
   const [response] = await client.synthesizeSpeech({
     input: { text: number.toString() },
-    voice: { languageCode: "tr-TR", ssmlGender: "FEMALE" },
+    voice: {
+      languageCode: "tr-TR",
+      ssmlGender: "FEMALE",
+      name: "tr-TR-Wavenet-C",
+    },
     audioConfig: { audioEncoding: "MP3" },
   });
 

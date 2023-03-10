@@ -42,7 +42,11 @@ async function getTextAudio(text: string) {
 
   const [response] = await client.synthesizeSpeech({
     input: { text },
-    voice: { languageCode: "tr-TR", ssmlGender: "FEMALE" },
+    voice: {
+      languageCode: "tr-TR",
+      ssmlGender: "FEMALE",
+      name: "tr-TR-Wavenet-C",
+    },
     audioConfig: { audioEncoding: "MP3" },
   });
 
