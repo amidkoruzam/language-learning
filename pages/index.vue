@@ -23,9 +23,14 @@
     <audio v-show="url.length" :src="url" controls class="audio" />
 
     <div v-show="url.length" class="answer">
-      <form @submit="onAnswerSubmit">
+      <form @submit.prevent="onAnswerSubmit">
         <span class="p-float-label">
-          <InputNumber class="input" id="answer" v-model="userAnswer" />
+          <InputNumber
+            class="input"
+            id="answer"
+            v-model="userAnswer"
+            @keydown.enter="onAnswerSubmit"
+          />
           <label for="answer">Answer</label>
         </span>
 
@@ -74,7 +79,7 @@ const onSubmit = async (e) => {
 
 const onAnswerSubmit = (e) => {
   e.preventDefault();
-  console.log(toast);
+
   if (correctAnswer.value === userAnswer.value) {
     toast.add({
       severity: "success",
