@@ -9,12 +9,17 @@
       <Button class="generate-button" type="submit">Generate</Button>
     </form>
 
-    <div class="generated-content-container" v-show="audio.length">
-      <audio :src="audio" controls class="audio" />
-      <div class="text">
-        <p>{{ text }}</p>
+    <template v-if="loading">
+      <ProgressSpinner />
+    </template>
+    <template v-else>
+      <div class="generated-content-container" v-show="audio.length">
+        <audio :src="audio" controls class="audio" />
+        <div class="text">
+          <p>{{ text }}</p>
+        </div>
       </div>
-    </div>
+    </template>
   </Container>
 </template>
 
@@ -26,6 +31,7 @@ import { textApi } from "src/shared/api/text";
 const keyWords = ref("");
 const text = ref("");
 const audio = ref("");
+const loading = ref(false);
 
 const base64ToBlob = (base64, type) => {
   const byteString = atob(base64);
@@ -40,7 +46,11 @@ const base64ToBlob = (base64, type) => {
 const onSubmit = (e) => {
   e.preventDefault();
 
+  loading.value = true;
+
   textApi.getText({ keyWords: keyWords.value }).then((response) => {
+    loading.value = false;
+
     text.value = response.text;
     audio.value = URL.createObjectURL(
       base64ToBlob(response.audio, "audio/mpeg")
