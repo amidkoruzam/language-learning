@@ -12,7 +12,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Button", Button);
   nuxtApp.vueApp.component("InputNumber", InputNumber);
   nuxtApp.vueApp.component("InputText", InputText);
-  nuxtApp.vueApp.use(ToastService);
   nuxtApp.vueApp.component("Toast", Toast);
   nuxtApp.vueApp.component("ProgressSpinner", ProgressSpinner);
+
+  nuxtApp.vueApp.use(ToastService);
 });
