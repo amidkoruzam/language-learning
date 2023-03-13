@@ -20,23 +20,31 @@
       <Button type="submit">Select</Button>
     </form>
 
-    <audio v-show="url.length" :src="url" controls class="audio" />
+    <template v-if="isLoading">
+      <div class="p-d-flex p-jc-center">
+        <ProgressSpinner />
+      </div>
+    </template>
 
-    <div v-show="url.length" class="answer">
-      <form @submit.prevent="onAnswerSubmit">
-        <span class="p-float-label">
-          <InputNumber
-            class="input"
-            id="answer"
-            v-model="userAnswer"
-            @keydown.enter="onAnswerSubmit"
-          />
-          <label for="answer">Answer</label>
-        </span>
+    <template v-else>
+      <audio v-show="url.length" :src="url" controls class="audio" />
 
-        <Button class="answer-button" type="submit">Submit</Button>
-      </form>
-    </div>
+      <div v-show="url.length" class="answer">
+        <form @submit.prevent="onAnswerSubmit">
+          <span class="p-float-label">
+            <InputNumber
+              class="input"
+              id="answer"
+              v-model="userAnswer"
+              @keydown.enter="onAnswerSubmit"
+            />
+            <label for="answer">Answer</label>
+          </span>
+
+          <Button class="answer-button" type="submit">Submit</Button>
+        </form>
+      </div>
+    </template>
   </Container>
 
   <Toast />
@@ -53,6 +61,7 @@ const max = ref(100);
 const url = ref("");
 const userAnswer = ref(0);
 const correctAnswer = ref(0);
+const isLoading = ref(false);
 
 const toast = useToast();
 
@@ -69,12 +78,16 @@ const base64ToBlob = (base64, type) => {
 const onSubmit = async (e) => {
   e.preventDefault();
 
+  isLoading.value = true;
+
   const res = await numbersApi.getAudio({ min: min.value, max: max.value });
   const blob = base64ToBlob(res.audio, "audio/mpeg");
 
   correctAnswer.value = res.number;
 
   url.value = URL.createObjectURL(blob);
+
+  isLoading.value = false;
 };
 
 const onAnswerSubmit = (e) => {
