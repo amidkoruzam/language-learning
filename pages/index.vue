@@ -93,12 +93,14 @@ const onSubmit = async (e) => {
 const onAnswerSubmit = (e) => {
   e.preventDefault();
 
+  const toastLifetimeInMs = 3000;
+
   if (correctAnswer.value === userAnswer.value) {
     toast.add({
       severity: "success",
       summary: "Info",
       detail: "Correct",
-      life: 3000,
+      life: toastLifetimeInMs,
     });
 
     url.value = "";
@@ -108,7 +110,7 @@ const onAnswerSubmit = (e) => {
       severity: "error",
       summary: "Info",
       detail: "Incorrect",
-      life: 3000,
+      life: toastLifetimeInMs,
     });
   }
 };
